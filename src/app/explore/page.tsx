@@ -8,13 +8,15 @@ import BottomNav from "@/components/BottomNav";
 
 const CATEGORIES = ["All", "Men", "Women", "Kids", "Other"];
 
+// Aspect ratios for staggered masonry layout
 const TALL = "aspect-[0.68]";
 const SHORT = "aspect-[0.92]";
 
-function leftClass(i: number) {
+function getLeftColAspect(i: number) {
   return i % 2 === 0 ? TALL : SHORT;
 }
-function rightClass(i: number) {
+
+function getRightColAspect(i: number) {
   return i % 2 === 0 ? SHORT : TALL;
 }
 
@@ -82,54 +84,64 @@ export default function ExplorePage({
 
       {/* ── Product grid ── */}
       <div className="mt-6 lg:mt-8">
-        {/* Mobile / tablet: staggered 2-col */}
-        <div className="flex gap-3 lg:hidden">
-          <div className="flex flex-1 flex-col gap-3">
-            {loading
-              ? skeletons.filter((_, i) => i % 2 === 0).map((_, i) => (
+        {loading ? (
+          // Loading skeleton - staggered layout
+          <div className="flex gap-3 lg:gap-6">
+            <div className="flex flex-1 flex-col gap-3 lg:gap-6">
+              {skeletons
+                .filter((_, i) => i % 2 === 0)
+                .map((_, i) => (
                   <div
                     key={i}
-                    className={`${leftClass(i)} w-full rounded-[1.5rem] bg-white/60 animate-pulse`}
+                    className={`w-full rounded-[1.5rem] bg-white/60 animate-pulse ${
+                      getLeftColAspect(i)
+                    }`}
                   />
-                ))
-              : leftCol.map((p, i) => (
-                  <ProductCard key={p._id} product={p} imageClass={leftClass(i)} />
                 ))}
-          </div>
-
-          <div className="flex flex-1 flex-col gap-3 pt-10">
-            {loading
-              ? skeletons.filter((_, i) => i % 2 !== 0).map((_, i) => (
+            </div>
+            <div className="flex flex-1 flex-col gap-3 pt-10 lg:gap-6 lg:pt-16">
+              {skeletons
+                .filter((_, i) => i % 2 !== 0)
+                .map((_, i) => (
                   <div
                     key={i}
-                    className={`${rightClass(i)} w-full rounded-[1.5rem] bg-white/60 animate-pulse`}
+                    className={`w-full rounded-[1.5rem] bg-white/60 animate-pulse ${
+                      getRightColAspect(i)
+                    }`}
                   />
-                ))
-              : rightCol.map((p, i) => (
-                  <ProductCard key={p._id} product={p} imageClass={rightClass(i)} />
                 ))}
+            </div>
           </div>
-        </div>
-
-        {/* Desktop: uniform 3-col → 4-col grid */}
-        <div className="hidden lg:grid lg:grid-cols-3 xl:grid-cols-4 lg:gap-6">
-          {loading
-            ? skeletons.map((_, i) => (
-                <div
-                  key={i}
-                  className="aspect-[0.82] rounded-[1.5rem] bg-white/60 animate-pulse"
+        ) : products.length === 0 ? (
+          <p className="py-16 text-center text-gray-500">
+            No products found.
+          </p>
+        ) : (
+          // Staggered 2-column masonry layout
+          <div className="flex gap-3 lg:gap-6">
+            {/* Left column */}
+            <div className="flex flex-1 flex-col gap-3 lg:gap-6">
+              {leftCol.map((p, i) => (
+                <ProductCard
+                  key={p._id}
+                  product={p}
+                  imageClass={getLeftColAspect(i)}
                 />
-              ))
-            : products.length === 0
-            ? (
-              <p className="col-span-4 py-16 text-center text-gray-500">
-                No products found.
-              </p>
-            )
-            : products.map((p) => (
-                <ProductCard key={p._id} product={p} imageClass="aspect-[0.82]" />
               ))}
-        </div>
+            </div>
+
+            {/* Right column - offset by padding */}
+            <div className="flex flex-1 flex-col gap-3 pt-10 lg:gap-6 lg:pt-16">
+              {rightCol.map((p, i) => (
+                <ProductCard
+                  key={p._id}
+                  product={p}
+                  imageClass={getRightColAspect(i)}
+                />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       <BottomNav />
