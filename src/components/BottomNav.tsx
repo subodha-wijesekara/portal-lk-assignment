@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Search, ShoppingCart, Settings } from "lucide-react";
+import { Home, Search, ShoppingCart, Settings, User } from "lucide-react";
 
 const navItems = [
   { label: "Home", href: "/", icon: Home },
@@ -35,6 +35,13 @@ export default function BottomNav() {
           </Link>
         );
       })}
+      
+      {/* Profile Icon for Desktop Sidebar */}
+      <div className="hidden md:flex mt-auto w-full items-center justify-center pt-4">
+        <button className="flex h-[36px] w-[36px] items-center justify-center rounded-full bg-gray-900 border-[1.5px] border-gray-900 text-white transition-colors hover:bg-gray-800">
+          <span className="text-sm font-semibold tracking-wider">U</span>
+        </button>
+      </div>
     </nav>
   );
 }

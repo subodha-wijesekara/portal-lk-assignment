@@ -56,9 +56,6 @@ export default function ExplorePage({
           <button className="flex items-center justify-center p-1 -ml-1 text-gray-900">
             <LayoutGrid size={22} strokeWidth={1.5} />
           </button>
-          <button className="flex items-center text-gray-900 justify-center h-[34px] w-[34px] rounded-full border-[1.5px] border-gray-900 bg-white">
-            <User size={16} strokeWidth={1.5} />
-          </button>
         </div>
 
         {/* ── Heading ── */}
