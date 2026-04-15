@@ -44,8 +44,8 @@ export default function CartPage() {
     cart?.items.reduce((sum, item) => sum + item.quantity, 0) ?? 0;
 
   return (
-    <main className="min-h-dvh bg-white px-6 pb-20 pt-4 sm:px-8">
-      <div className="mx-auto flex min-h-[calc(100dvh-3rem)] w-full max-w-[26rem] flex-col bg-white">
+    <main className="min-h-dvh w-full pb-20 md:pb-0">
+      <div className="mx-auto flex min-h-dvh w-full max-w-3xl flex-col px-5 pt-8 sm:px-8 md:pl-28 lg:pl-32">
         <header className="flex items-center justify-between pb-4">
           <button
             onClick={() => router.back()}
