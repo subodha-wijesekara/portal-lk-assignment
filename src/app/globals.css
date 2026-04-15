@@ -276,3 +276,14 @@ body {
     padding-bottom: 2rem;
   }
 }
+
+/* Hide scrollbar but allow scroll */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+  .scroll-content {\n    padding-bottom: 2rem;\n  }\n}\n\n/* Hide scrollbar but allow scroll */\n.no-scrollbar {\n  scrollbar-width: none;\n  -ms-overflow-style: none;\n}\n.no-scrollbar::-webkit-scrollbar {\n  display: none;\n}\n

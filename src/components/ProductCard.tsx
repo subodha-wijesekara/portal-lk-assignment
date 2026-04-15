@@ -12,7 +12,7 @@ interface ProductCardProps {
 export default function ProductCard({ product }: ProductCardProps) {
   return (
     <Link href={`/products/${product._id}`} className="product-card group block">
-      <div className="relative w-full aspect-[0.82] overflow-hidden">
+      <div className="relative w-full aspect-[0.78] overflow-hidden">
         <Image
           src={product.images[0]}
           alt={product.title}
@@ -28,7 +28,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             e.preventDefault();
             window.location.href = `/products/${product._id}`;
           }}
-          className="absolute bottom-3 right-3 w-10 h-10 bg-white/90 backdrop-blur rounded-full flex items-center justify-center text-gray-900 shadow-lg hover:bg-white transition-all"
+          className="absolute bottom-3 right-3 w-9 h-9 bg-gray-900 rounded-full flex items-center justify-center text-white shadow-lg hover:bg-gray-700 transition-all"
         >
           <ShoppingCart size={16} />
         </button>
