@@ -123,7 +123,7 @@ body {
   border-color: #9ca3af;
 }
 
-/* Bottom navigation bar (floating on mobile, rail on desktop) */
+/* Bottom navigation bar */
 .bottom-nav {
   position: fixed;
   left: 0;
@@ -285,5 +285,3 @@ body {
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
-
-  .scroll-content {\n    padding-bottom: 2rem;\n  }\n}\n\n/* Hide scrollbar but allow scroll */\n.no-scrollbar {\n  scrollbar-width: none;\n  -ms-overflow-style: none;\n}\n.no-scrollbar::-webkit-scrollbar {\n  display: none;\n}\n
