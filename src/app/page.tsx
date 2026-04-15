@@ -56,11 +56,6 @@ export default function SplashPage() {
       <div className="hidden min-h-dvh items-center lg:flex">
         <div className="grid w-full items-center gap-8 lg:grid-cols-[1.02fr_0.98fr] lg:gap-12">
           <section className="space-y-7">
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/70 bg-white/75 px-4 py-2 text-xs font-semibold tracking-[0.22em] text-gray-700 shadow-sm backdrop-blur">
-              <Sparkles size={14} className="text-orange-500" />
-              NEW SEASON DROP
-            </div>
-
             <div className="space-y-4">
               <h1 className="max-w-xl text-5xl font-bold leading-[0.95] tracking-[-0.04em] text-gray-950 sm:text-6xl xl:text-7xl">
                 Find The Best Collections
@@ -98,9 +93,6 @@ export default function SplashPage() {
 
           <section className="relative mx-auto w-full max-w-[560px] lg:max-w-none">
             <div className="surface relative overflow-hidden rounded-[2.25rem] border border-white/80 p-4 sm:p-5">
-              <div className="absolute left-6 top-6 z-10 rounded-full bg-white/85 px-4 py-2 text-xs font-semibold tracking-[0.2em] text-gray-600 shadow-sm">
-                FASHIONHUB
-              </div>
               <div className="relative aspect-[0.82] overflow-hidden rounded-[1.8rem] bg-[#e6ddcf]">
                 <Image
                   src="https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=800&q=80"
