@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ChevronLeft, Heart, Trash2 } from "lucide-react";
 import { ICart, ICartItem } from "@/types";
+import BottomNav from "@/components/BottomNav";
 
 const DELIVERY_FEE = 12;
 
@@ -174,18 +175,18 @@ export default function CartPage() {
             </div>
           </div>
 
-          <div className="mt-10 pb-4">
+          <div className="mt-10 pb-4 flex flex-col items-center">
             {cart && cart.items.length > 0 ? (
               <button
                 onClick={() => router.push("/checkout")}
-                className="w-full rounded-full bg-[#f6890d] py-5 text-lg font-bold text-white shadow-[0_15px_30px_rgba(246,137,13,0.3)] transition active:scale-[0.98]"
+                className="w-full max-w-[340px] rounded-full bg-[#f6890d] py-5 text-lg font-bold text-white shadow-[0_15px_30px_rgba(246,137,13,0.3)] transition active:scale-[0.98]"
               >
                 Checkout Now
               </button>
             ) : (
               <Link
                 href="/explore"
-                className="block w-full text-center rounded-full bg-gray-950 py-5 text-lg font-bold text-white transition active:scale-[0.98]"
+                className="block w-full max-w-[340px] text-center rounded-full bg-gray-950 py-5 text-lg font-bold text-white transition active:scale-[0.98]"
               >
                 Find Products
               </Link>
@@ -193,6 +194,7 @@ export default function CartPage() {
           </div>
         </div>
       </div>
+      <BottomNav />
     </main>
   );
 }
