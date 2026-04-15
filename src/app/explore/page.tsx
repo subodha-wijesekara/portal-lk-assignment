@@ -8,6 +8,18 @@ import BottomNav from "@/components/BottomNav";
 
 const CATEGORIES = ["All", "Men", "Women", "Kids", "Other"];
 
+// Aspect ratios for staggered masonry layout
+const TALL = "aspect-[0.68]";
+const SHORT = "aspect-[0.92]";
+
+function getLeftColAspect(i: number) {
+  return i % 2 === 0 ? TALL : SHORT;
+}
+
+function getRightColAspect(i: number) {
+  return i % 2 === 0 ? SHORT : TALL;
+}
+
 export default function ExplorePage({
   searchParams,
 }: {
@@ -31,6 +43,8 @@ export default function ExplorePage({
       .finally(() => setLoading(false));
   }, [activeCategory]);
 
+  const leftCol = products.filter((_, i) => i % 2 === 0);
+  const rightCol = products.filter((_, i) => i % 2 !== 0);
   const skeletons = [...Array(6)];
 
   return (
@@ -70,25 +84,64 @@ export default function ExplorePage({
 
       {/* ── Product grid ── */}
       <div className="mt-6 lg:mt-8">
-        {/* Uniform 2-column grid for all screens */}
-        <div className="grid grid-cols-2 gap-3 md:gap-4 lg:gap-6">
-          {loading
-            ? skeletons.map((_, i) => (
-                <div
-                  key={i}
-                  className="aspect-[0.78] rounded-[1.5rem] bg-white/60 animate-pulse"
+        {loading ? (
+          // Loading skeleton - staggered layout
+          <div className="flex gap-3 lg:gap-6">
+            <div className="flex flex-1 flex-col gap-3 lg:gap-6">
+              {skeletons
+                .filter((_, i) => i % 2 === 0)
+                .map((_, i) => (
+                  <div
+                    key={i}
+                    className={`w-full rounded-[1.5rem] bg-white/60 animate-pulse ${
+                      getLeftColAspect(i)
+                    }`}
+                  />
+                ))}
+            </div>
+            <div className="flex flex-1 flex-col gap-3 pt-10 lg:gap-6 lg:pt-16">
+              {skeletons
+                .filter((_, i) => i % 2 !== 0)
+                .map((_, i) => (
+                  <div
+                    key={i}
+                    className={`w-full rounded-[1.5rem] bg-white/60 animate-pulse ${
+                      getRightColAspect(i)
+                    }`}
+                  />
+                ))}
+            </div>
+          </div>
+        ) : products.length === 0 ? (
+          <p className="py-16 text-center text-gray-500">
+            No products found.
+          </p>
+        ) : (
+          // Staggered 2-column masonry layout
+          <div className="flex gap-3 lg:gap-6">
+            {/* Left column */}
+            <div className="flex flex-1 flex-col gap-3 lg:gap-6">
+              {leftCol.map((p, i) => (
+                <ProductCard
+                  key={p._id}
+                  product={p}
+                  imageClass={getLeftColAspect(i)}
                 />
-              ))
-            : products.length === 0
-            ? (
-              <p className="col-span-2 py-16 text-center text-gray-500">
-                No products found.
-              </p>
-            )
-            : products.map((p) => (
-                <ProductCard key={p._id} product={p} imageClass="aspect-[0.78]" />
               ))}
-        </div>
+            </div>
+
+            {/* Right column - offset by padding */}
+            <div className="flex flex-1 flex-col gap-3 pt-10 lg:gap-6 lg:pt-16">
+              {rightCol.map((p, i) => (
+                <ProductCard
+                  key={p._id}
+                  product={p}
+                  imageClass={getRightColAspect(i)}
+                />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       <BottomNav />
