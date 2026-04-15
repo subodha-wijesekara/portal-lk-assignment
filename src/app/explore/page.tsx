@@ -48,39 +48,39 @@ export default function ExplorePage({
   const skeletons = [...Array(6)];
 
   return (
-    <main className="min-h-dvh bg-white mx-auto max-w-md relative pb-20">
-      <div className="px-5 pt-8">
+    <main className="min-h-dvh w-full pb-20 md:pb-0">
+      <div className="mx-auto w-full max-w-7xl px-5 pt-8 sm:px-8 md:pl-28 lg:pl-32">
         
         {/* ── Top bar ── */}
-        <div className="flex items-center justify-between pb-6 border-b-0">
+        <div className="flex items-center justify-between pb-6 border-b-0 max-w-md">
           <button className="flex items-center justify-center p-1 -ml-1 text-gray-900">
             <LayoutGrid size={22} strokeWidth={1.5} />
           </button>
-          <button className="flex items-center text-gray-900 justify-center h-[34px] w-[34px] rounded-full border-[1.5px] border-gray-900">
+          <button className="flex items-center text-gray-900 justify-center h-[34px] w-[34px] rounded-full border-[1.5px] border-gray-900 bg-white">
             <User size={16} strokeWidth={1.5} />
           </button>
         </div>
 
         {/* ── Heading ── */}
         <div className="mt-1">
-          <h1 className="text-[34px] tracking-tight font-medium text-gray-900 leading-none">
+          <h1 className="text-[34px] tracking-tight font-medium text-gray-900 leading-none lg:text-5xl">
             Explore
           </h1>
-          <p className="mt-1.5 text-[15px] font-normal text-gray-400">
+          <p className="mt-1.5 text-[15px] font-normal text-gray-400 lg:text-lg lg:mt-3">
             Best trendy collection!
           </p>
         </div>
 
         {/* ── Category pills ── */}
-        <div className="mt-7 flex items-center gap-1 overflow-x-auto pb-1 no-scrollbar">
+        <div className="mt-7 flex items-center gap-1 overflow-x-auto pb-2 no-scrollbar lg:mt-10 lg:gap-3">
           {CATEGORIES.map((cat) => (
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className={`shrink-0 rounded-full px-5 py-[6px] text-[15px] font-normal transition-all ${
+              className={`shrink-0 rounded-full px-5 py-[6px] text-[15px] font-normal transition-all lg:px-6 lg:py-2 ${
                 activeCategory === cat
                   ? "bg-[#ef7e00] text-white"
-                  : "text-gray-800 bg-transparent hover:bg-gray-50"
+                  : "text-gray-800 bg-transparent hover:bg-gray-100"
               }`}
             >
               {cat}
@@ -89,63 +89,32 @@ export default function ExplorePage({
         </div>
 
         {/* ── Product grid ── */}
-        <div className="mt-8">
+        <div className="mt-8 lg:mt-10">
           {loading ? (
-            // Loading skeleton
-            <div className="flex gap-4">
-              <div className="flex flex-1 flex-col gap-6">
-                {skeletons
-                  .filter((_, i) => i % 2 === 0)
-                  .map((_, i) => (
-                    <div
-                      key={i}
-                      className={`w-full rounded-[24px] bg-gray-100 animate-pulse ${
-                        getLeftColAspect(i)
-                      }`}
-                    />
-                  ))}
-              </div>
-              <div className="flex flex-1 flex-col gap-6 pt-12">
-                {skeletons
-                  .filter((_, i) => i % 2 !== 0)
-                  .map((_, i) => (
-                    <div
-                      key={i}
-                      className={`w-full rounded-[24px] bg-gray-100 animate-pulse ${
-                        getRightColAspect(i)
-                      }`}
-                    />
-                  ))}
-              </div>
+            <div className="columns-2 md:columns-3 xl:columns-4 gap-4 sm:gap-6 space-y-4 sm:space-y-6">
+              {skeletons.map((_, i) => (
+                <div
+                  key={i}
+                  className={`w-full rounded-[24px] bg-gray-100 animate-pulse break-inside-avoid ${
+                    getLeftColAspect(i)
+                  }`}
+                />
+              ))}
             </div>
           ) : products.length === 0 ? (
             <p className="py-16 text-center text-gray-500">
               No products found.
             </p>
           ) : (
-            // Staggered 2-column masonry layout
-            <div className="flex gap-4">
-              {/* Left column */}
-              <div className="flex flex-1 flex-col gap-5">
-                {leftCol.map((p, i) => (
+            <div className="columns-2 md:columns-3 xl:columns-4 gap-4 sm:gap-6 space-y-4 sm:space-y-6">
+              {products.map((p, i) => (
+                <div key={p._id} className="break-inside-avoid">
                   <ProductCard
-                    key={p._id}
                     product={p}
                     imageClass={getLeftColAspect(i)}
                   />
-                ))}
-              </div>
-
-              {/* Right column - offset by padding */}
-              <div className="flex flex-1 flex-col gap-5 pt-8">
-                {rightCol.map((p, i) => (
-                  <ProductCard
-                    key={p._id}
-                    product={p}
-                    imageClass={getRightColAspect(i)}
-                  />
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
           )}
         </div>
