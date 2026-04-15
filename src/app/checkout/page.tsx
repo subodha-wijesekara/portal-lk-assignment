@@ -2,258 +2,197 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronLeft, MapPin, Clock } from "lucide-react";
+import { ChevronLeft, Clock } from "lucide-react";
+import Image from "next/image";
 import { ICart } from "@/types";
 
 const DELIVERY_FEE = 12;
 
-// Payment method logos as simple styled pills
 const PAYMENT_METHODS = [
-  { id: "VISA", label: "VISA", style: "bg-[#1A1F71] text-white font-bold italic px-3 py-1.5 text-xs rounded" },
-  { id: "AMEX", label: "AMEX", style: "bg-[#2671B2] text-white font-bold px-2 py-1.5 text-xs rounded" },
-  { id: "MASTERCARD", label: "MC", style: "bg-[#EB001B] text-white font-bold px-2 py-1.5 text-xs rounded" },
-  { id: "PAYPAL", label: "PayPal", style: "bg-[#003087] text-white font-bold px-3 py-1.5 text-xs rounded" },
-  { id: "APPLE_PAY", label: "Pay", style: "bg-black text-white font-semibold px-3 py-1.5 text-xs rounded flex items-center gap-0.5" },
+  { id: "VISA", name: "Visa", icon: "https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" },
+  { id: "AMEX", name: "Amex", icon: "https://upload.wikimedia.org/wikipedia/commons/3/30/American_Express_logo.svg" },
+  { id: "MASTERCARD", name: "Mastercard", icon: "https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" },
+  { id: "PAYPAL", name: "PayPal", icon: "https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" },
+  { id: "APPLE_PAY", name: "Apple Pay", icon: "https://upload.wikimedia.org/wikipedia/commons/b/b0/Apple_Pay_logo.svg" },
 ];
 
 export default function CheckoutPage() {
   const router = useRouter();
   const [cart, setCart] = useState<ICart | null>(null);
   const [loading, setLoading] = useState(true);
-  const [selectedPayment, setSelectedPayment] = useState("VISA");
-  const [voucher, setVoucher] = useState("");
   const [placing, setPlacing] = useState(false);
   const [orderId, setOrderId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const fetchCart = useCallback(async () => {
-    const res = await fetch("/api/cart");
-    const data = await res.json();
-    setCart(data.cart);
-    setLoading(false);
+    try {
+      const res = await fetch("/api/cart");
+      const data = await res.json();
+      setCart(data.cart);
+    } catch (err) {
+      console.error("Failed to fetch cart:", err);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => {
     fetchCart();
   }, [fetchCart]);
 
-  const totalItems =
-    cart?.items.reduce((sum, item) => sum + item.price * item.quantity, 0) ?? 0;
+  const handlePayNow = async () => {
+    setPlacing(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          deliveryAddress: "25/3 Housing Estate, Sylhet",
+          paymentMethod: "VISA", // Defaulting for simple UI
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to place order");
+      setOrderId(data.orderId);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setPlacing(false);
+    }
+  };
+
+  const totalItemsPrice = cart?.items.reduce((sum, item) => sum + item.price * item.quantity, 0) ?? 0;
+  const itemCount = cart?.items.reduce((sum, item) => sum + item.quantity, 0) ?? 0;
+  const totalPayment = totalItemsPrice + DELIVERY_FEE;
+
   if (orderId) {
     return (
-      <div className="page-shell min-h-dvh flex items-center justify-center">
-        <div className="surface w-full max-w-2xl rounded-[2.25rem] px-6 py-10 text-center sm:px-10 sm:py-12">
-          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-orange-50 text-4xl">
-            🎉
-          </div>
-          <h2 className="mt-6 text-3xl font-bold tracking-[-0.04em] text-gray-950">
-            Order Placed!
-          </h2>
-          <p className="mt-3 text-sm text-gray-600">
-            Your order has been confirmed and the payment flow is ready for large
-            and small screens.
-          </p>
-          <p className="mt-4 text-sm font-semibold text-gray-700">
-            Order ID: <span className="font-bold text-orange-500">{orderId}</span>
-          </p>
+      <main className="min-h-dvh bg-white flex items-center justify-center p-6">
+        <div className="w-full max-w-md text-center">
+          <h2 className="text-2xl font-semibold text-gray-900">Order Placed</h2>
+          <p className="mt-2 text-gray-500">Your order #{orderId} is confirmed.</p>
           <button
             onClick={() => router.push("/explore")}
-            className="btn-primary mx-auto mt-8 max-w-xs"
-            id="continue-shopping-btn"
+            className="mt-8 w-full rounded-full bg-[#f97316] py-4 text-white font-medium"
           >
             Continue Shopping
           </button>
         </div>
-      </div>
+      </main>
     );
   }
 
   return (
-    <div className="page-shell min-h-dvh lg:pl-32">
-      <div className="mx-auto grid max-w-6xl gap-6 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start">
-        <section className="space-y-6">
-          <header className="surface flex items-center justify-between rounded-[1.75rem] px-4 py-3 sm:px-5">
-            <button
-              onClick={() => router.back()}
-              aria-label="Go back"
-              className="w-11 h-11 rounded-full bg-white/85 flex items-center justify-center border border-gray-200 text-gray-800 transition hover:bg-white"
-            >
-              <ChevronLeft size={20} strokeWidth={2} />
-            </button>
-            <span className="text-sm font-semibold uppercase tracking-[0.24em] text-gray-500">
-              Checkout
-            </span>
-            <div className="w-11" />
-          </header>
+    <main className="min-h-dvh bg-white text-gray-900 mx-auto max-w-md relative pb-10">
+      {/* Header */}
+      <header className="flex items-center justify-between px-6 pt-10 pb-6 rounded-t-3xl">
+        <button
+          onClick={() => router.back()}
+          aria-label="Go back"
+          className="text-gray-900 -ml-2 p-2"
+        >
+          <ChevronLeft size={24} strokeWidth={1.5} />
+        </button>
+        <h1 className="text-base font-normal tracking-wide text-gray-900 mr-2">
+          Checkout
+        </h1>
+        <div className="w-6" /> {/* Spacer to align title to true center relative to icons */}
+      </header>
 
-          <div className="space-y-6 rounded-[2.25rem] bg-transparent">
-            <section className="surface rounded-[2rem] p-5 sm:p-6">
-              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-gray-500">
-                Delivery Address
-              </p>
-              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-50">
-                    <MapPin size={20} className="text-orange-500" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-gray-950">
-                      25/3 Housing Estate, Sylhet
-                    </p>
-                    <div className="mt-0.5 flex items-center gap-1">
-                      <Clock size={12} className="text-gray-400" />
-                      <p className="text-xs text-gray-500">
-                        Delivered in next 7 days
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <button className="text-xs font-semibold text-orange-500 hover:underline">
-                  Change
-                </button>
-              </div>
-            </section>
-
-            <section className="surface rounded-[2rem] p-5 sm:p-6">
-              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-gray-500">
-                Payment Method
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {PAYMENT_METHODS.map((pm) => (
-                  <button
-                    key={pm.id}
-                    onClick={() => setSelectedPayment(pm.id)}
-                    aria-pressed={selectedPayment === pm.id}
-                    aria-label={`Pay with ${pm.label}`}
-                    className={`${pm.style} transition-all ${
-                      selectedPayment === pm.id
-                        ? "ring-2 ring-orange-500 ring-offset-1"
-                        : "opacity-70 hover:opacity-100"
-                    }`}
-                  >
-                    {pm.id === "APPLE_PAY" ? (
-                      <>
-                        <span>🍎</span>
-                        <span>{pm.label}</span>
-                      </>
-                    ) : (
-                      pm.label
-                    )}
-                  </button>
-                ))}
-              </div>
-            </section>
-
-            <section className="surface rounded-[2rem] p-5 sm:p-6">
-              <div className="flex items-center gap-3">
-                <input
-                  type="text"
-                  placeholder="Add Voucher"
-                  value={voucher}
-                  onChange={(e) => setVoucher(e.target.value)}
-                  className="flex-1 rounded-2xl border border-gray-200 px-4 py-3 text-sm outline-none transition focus:border-orange-400"
-                  aria-label="Voucher code"
+      <div className="px-6 flex flex-col space-y-7 mt-2">
+        {/* Delivery Address */}
+        <section className="space-y-4">
+          <h2 className="text-[13px] font-normal text-gray-400">
+            Delivery Address
+          </h2>
+          <div className="flex items-center justify-between">
+            <div className="flex gap-4 items-center">
+              <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl bg-gray-100">
+                <Image 
+                  src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=400&q=80" 
+                  alt="Map" fill className="object-cover opacity-80" unoptimized
                 />
-                <button className="rounded-2xl bg-orange-500 px-4 py-3 text-sm font-semibold text-white transition hover:bg-orange-600">
-                  Apply
-                </button>
               </div>
-            </section>
-
-            {!loading && cart && cart.items.length > 0 && (
-              <div className="surface rounded-[2rem] border border-red-100 bg-red-50/70 px-4 py-4 text-sm text-red-700">
-                <span className="font-bold">Note:</span> Use your order id at the
-                payment. It appears after placing the order.
-              </div>
-            )}
-          </div>
-        </section>
-
-        <aside className="space-y-4 lg:sticky lg:top-6">
-          <div className="surface rounded-[2.25rem] p-5 sm:p-6">
-            <p className="text-xs uppercase tracking-[0.22em] text-gray-500">
-              Order Summary
-            </p>
-
-            <div className="mt-5 space-y-3">
-              <div className="flex justify-between text-sm text-gray-600">
-                <span>Total Items ({itemCount})</span>
-                <span className="font-medium">${totalItems.toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between text-sm text-gray-600">
-                <span>Standard Delivery</span>
-                <span className="font-medium">${DELIVERY_FEE.toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between text-base font-bold text-gray-950 pt-2">
-                <span>Total Payment</span>
-                <span>${totalPayment.toFixed(2)}</span>
+              <div className="flex flex-col">
+                <p className="text-[15px] font-semibold text-gray-900 leading-snug">
+                  25/3 Housing Estate,<br />Sylhet
+                </p>
               </div>
             </div>
-
-            {error && (
-              <p className="mt-4 text-center text-sm text-red-500">{error}</p>
-            )}
-
-            <button
-              onClick={handlePayNow}
-              disabled={placing || loading || !cart || cart.items.length === 0}
-              className="btn-primary mt-6 disabled:opacity-60"
-              id="pay-now-btn"
-            >
-              {placing ? "Processing..." : "Pay Now"}
+            <button className="text-[14px] font-normal text-gray-400 -mt-5">
+              Change
             </button>
           </div>
-
-          <div className="surface rounded-[2rem] p-5">
-            <p className="text-xs uppercase tracking-[0.22em] text-gray-500">
-              Secure checkout
-            </p>
-            <p className="mt-2 text-sm leading-6 text-gray-600">
-              Payment controls sit beside the order summary on desktop, while mobile
-              keeps the pay action pinned close to your thumb.
-            </p>
-          </div>
-        </aside>
-      </div>
-
-      <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-white/70 bg-white/90 px-5 py-4 shadow-[0_-12px_40px_rgba(24,16,6,0.08)] backdrop-blur lg:hidden">
-        <button
-          onClick={handlePayNow}
-          disabled={placing || loading || !cart || cart.items.length === 0}
-          className="btn-primary disabled:opacity-60"
-          id="pay-now-btn-mobile"
-        >
-          {placing ? "Processing..." : "Pay Now"}
-        </button>
-      </div>
-    </div>
-  );
-          <div className="flex justify-between text-sm text-gray-600">
-            <span>Standard Delivery</span>
-            <span className="font-medium">${DELIVERY_FEE.toFixed(2)}</span>
-          </div>
-          <div className="flex justify-between text-base font-bold text-gray-900 pt-1">
-            <span>Total Payment</span>
-            <span>${totalPayment.toFixed(2)}</span>
+          
+          <div className="flex items-center gap-2.5 pt-1">
+            <Clock size={16} strokeWidth={1.5} className="text-gray-500" />
+            <p className="text-[14.5px] font-medium text-gray-700">Delivered in next 7 days</p>
           </div>
         </section>
 
-        {error && (
-          <p className="mt-4 text-red-500 text-sm text-center">{error}</p>
-        )}
-      </div>
+        {/* Payment Method */}
+        <section className="space-y-4 pt-2">
+          <h2 className="text-[13px] font-normal text-gray-400">
+            Payment Method
+          </h2>
+          <div className="flex items-center gap-6 overflow-x-auto no-scrollbar pt-1 pb-1">
+            {PAYMENT_METHODS.map((method) => (
+              <div key={method.id} className="shrink-0 flex items-center justify-center">
+                <img 
+                   src={method.icon} 
+                   alt={method.name} 
+                   className="h-[18px] w-auto object-contain" 
+                   style={method.id === "APPLE_PAY" ? { filter: 'invert(1)', mixBlendMode: 'difference'} : {}}
+                />
+              </div>
+            ))}
+          </div>
+        </section>
 
-      {/* Pay Now button */}
-      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-white border-t border-gray-100 px-5 py-4">
-        <button
-          onClick={handlePayNow}
-          disabled={placing || loading || !cart || cart.items.length === 0}
-          className="btn-primary disabled:opacity-60"
-          id="pay-now-btn"
-        >
-          {placing ? "Processing..." : "Pay Now"}
-        </button>
+        {/* Add Voucher Button */}
+        <section className="pt-2">
+          <button className="w-full flex items-center justify-center rounded-[14px] bg-[#f8f9fa] py-4 text-[14px] font-medium text-gray-500 hover:bg-gray-100 transition-colors">
+            Add Voucher
+          </button>
+        </section>
+
+        {/* Note Area */}
+        <section className="pt-2">
+          <p className="text-[14px] leading-relaxed font-normal text-gray-400">
+            <span className="text-[#e12a20] font-medium">Note : </span> 
+            Use your order id at the payment. Your Id <span className="font-semibold text-gray-600">#154619</span> if you forget to put your order id we can&apos;t confirm the payment.
+          </p>
+        </section>
+
+        {/* Summary */}
+        <section className="pt-6 space-y-[18px]">
+          <div className="flex items-center justify-between text-[15px]">
+            <span className="font-normal text-gray-400">Total Items ({itemCount})</span>
+            <span className="font-bold text-gray-900">${totalItemsPrice.toFixed(2)}</span>
+          </div>
+          <div className="flex items-center justify-between text-[15px]">
+            <span className="font-normal text-gray-400">Standard Delivery</span>
+            <span className="font-bold text-gray-900">${DELIVERY_FEE.toFixed(2)}</span>
+          </div>
+          <div className="flex items-center justify-between text-[15px] pt-2">
+            <span className="font-normal text-gray-400">Total Payment</span>
+            <span className="font-bold text-gray-900">${totalPayment.toFixed(2)}</span>
+          </div>
+        </section>
+
+        {/* Action Button */}
+        <section className="pt-10 pb-10 flex flex-col items-center">
+          {error && <p className="mb-4 text-center text-sm font-semibold text-red-500">{error}</p>}
+          <button
+            onClick={handlePayNow}
+            disabled={placing || loading || !cart || cart.items.length === 0}
+            className="w-full max-w-[340px] flex items-center justify-center rounded-[2rem] bg-[#f6890d] py-4 text-[1.1rem] font-bold text-white transition-all active:bg-[#e07510] disabled:opacity-50"
+          >
+            {placing ? "Processing..." : "Pay Now"}
+          </button>
+        </section>
       </div>
-    </div>
+    </main>
   );
 }
