@@ -66,15 +66,15 @@ export default function ExplorePage({
       </div>
 
       {/* ── Category pills ── */}
-      <div className="mt-5 flex gap-2 overflow-x-auto pb-1 no-scrollbar lg:gap-3 lg:mt-7">
+      <div className="mt-5 flex gap-2 overflow-x-auto no-scrollbar lg:gap-3 lg:mt-7">
         {CATEGORIES.map((cat) => (
           <button
             key={cat}
             onClick={() => setActiveCategory(cat)}
-            className={`shrink-0 rounded-full px-5 py-2 text-sm font-semibold transition-all lg:px-6 lg:py-2.5 lg:text-[0.95rem] ${
+            className={`shrink-0 rounded-full px-4 py-1.5 text-sm font-semibold transition-all lg:px-5 lg:py-2 lg:text-base ${
               activeCategory === cat
                 ? "bg-orange-500 text-white shadow-md shadow-orange-200"
-                : "text-gray-500 hover:text-gray-800"
+                : "bg-white/50 text-gray-600 hover:bg-white/70 hover:text-gray-800 border border-gray-200"
             }`}
           >
             {cat}
