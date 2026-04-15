@@ -187,7 +187,7 @@ export default function CheckoutPage() {
           <button
             onClick={handlePayNow}
             disabled={placing || loading || !cart || cart.items.length === 0}
-            className="w-full max-w-[340px] flex items-center justify-center rounded-[2rem] bg-[#f6890d] py-4 text-[1.1rem] font-bold text-white transition-all active:bg-[#e07510] disabled:opacity-50"
+            className="w-full max-w-[340px] flex items-center justify-center rounded-[2rem] bg-[#f6890d] py-4 text-[1.1rem] font-medium text-white transition-all active:bg-[#e07510] disabled:opacity-50"
           >
             {placing ? "Processing..." : "Pay Now"}
           </button>
