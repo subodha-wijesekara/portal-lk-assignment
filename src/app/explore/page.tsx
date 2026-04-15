@@ -9,8 +9,8 @@ import BottomNav from "@/components/BottomNav";
 const CATEGORIES = ["All", "Men", "Women", "Kids", "Other"];
 
 // Aspect ratios for staggered masonry layout
-const TALL = "aspect-[0.68]";
-const SHORT = "aspect-[0.92]";
+const TALL = "aspect-[0.8]";
+const SHORT = "aspect-[1]";
 
 function getLeftColAspect(i: number) {
   return i % 2 === 0 ? TALL : SHORT;
@@ -48,103 +48,110 @@ export default function ExplorePage({
   const skeletons = [...Array(6)];
 
   return (
-    <div className="explore-page">
-      {/* ── Top bar ── */}
-      <div className="flex items-center justify-between pt-2">
-        <LayoutGrid size={24} strokeWidth={1.8} className="text-gray-900" />
-        <div className="h-7 w-7 rounded-full border-2 border-gray-300" />
-      </div>
-
-      {/* ── Heading ── */}
-      <div className="mt-8 lg:mt-12">
-        <h1 className="text-[2.1rem] font-bold tracking-[-0.04em] text-gray-950 lg:text-5xl">
-          Explore
-        </h1>
-        <p className="mt-1 text-[0.9rem] text-gray-400 lg:mt-2 lg:text-lg">
-          Best trendy collection!
-        </p>
-      </div>
-
-      {/* ── Category pills ── */}
-      <div className="mt-5 flex gap-2 overflow-x-auto pb-1 no-scrollbar lg:gap-3 lg:mt-7">
-        {CATEGORIES.map((cat) => (
-          <button
-            key={cat}
-            onClick={() => setActiveCategory(cat)}
-            className={`shrink-0 rounded-full px-5 py-2 text-sm font-semibold transition-all lg:px-6 lg:py-2.5 lg:text-[0.95rem] ${
-              activeCategory === cat
-                ? "bg-orange-500 text-white shadow-md shadow-orange-200"
-                : "text-gray-500 hover:text-gray-800"
-            }`}
-          >
-            {cat}
+    <main className="min-h-dvh bg-white mx-auto max-w-md relative pb-20">
+      <div className="px-5 pt-8">
+        
+        {/* ── Top bar ── */}
+        <div className="flex items-center justify-between pb-6 border-b-0">
+          <button className="flex items-center justify-center p-1 -ml-1 text-gray-900">
+            <LayoutGrid size={22} strokeWidth={1.5} />
           </button>
-        ))}
-      </div>
+          <button className="flex items-center text-gray-900 justify-center h-[34px] w-[34px] rounded-full border-[1.5px] border-gray-900">
+            <User size={16} strokeWidth={1.5} />
+          </button>
+        </div>
 
-      {/* ── Product grid ── */}
-      <div className="mt-6 lg:mt-8">
-        {loading ? (
-          // Loading skeleton - staggered layout
-          <div className="flex gap-3 lg:gap-6">
-            <div className="flex flex-1 flex-col gap-3 lg:gap-6">
-              {skeletons
-                .filter((_, i) => i % 2 === 0)
-                .map((_, i) => (
-                  <div
-                    key={i}
-                    className={`w-full rounded-[1.5rem] bg-white/60 animate-pulse ${
-                      getLeftColAspect(i)
-                    }`}
-                  />
-                ))}
-            </div>
-            <div className="flex flex-1 flex-col gap-3 pt-10 lg:gap-6 lg:pt-16">
-              {skeletons
-                .filter((_, i) => i % 2 !== 0)
-                .map((_, i) => (
-                  <div
-                    key={i}
-                    className={`w-full rounded-[1.5rem] bg-white/60 animate-pulse ${
-                      getRightColAspect(i)
-                    }`}
-                  />
-                ))}
-            </div>
-          </div>
-        ) : products.length === 0 ? (
-          <p className="py-16 text-center text-gray-500">
-            No products found.
+        {/* ── Heading ── */}
+        <div className="mt-1">
+          <h1 className="text-[34px] tracking-tight font-medium text-gray-900 leading-none">
+            Explore
+          </h1>
+          <p className="mt-1.5 text-[15px] font-normal text-gray-400">
+            Best trendy collection!
           </p>
-        ) : (
-          // Staggered 2-column masonry layout
-          <div className="flex gap-3 lg:gap-6">
-            {/* Left column */}
-            <div className="flex flex-1 flex-col gap-3 lg:gap-6">
-              {leftCol.map((p, i) => (
-                <ProductCard
-                  key={p._id}
-                  product={p}
-                  imageClass={getLeftColAspect(i)}
-                />
-              ))}
-            </div>
+        </div>
 
-            {/* Right column - offset by padding */}
-            <div className="flex flex-1 flex-col gap-3 pt-10 lg:gap-6 lg:pt-16">
-              {rightCol.map((p, i) => (
-                <ProductCard
-                  key={p._id}
-                  product={p}
-                  imageClass={getRightColAspect(i)}
-                />
-              ))}
+        {/* ── Category pills ── */}
+        <div className="mt-7 flex items-center gap-1 overflow-x-auto pb-1 no-scrollbar">
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setActiveCategory(cat)}
+              className={`shrink-0 rounded-full px-5 py-[6px] text-[15px] font-normal transition-all ${
+                activeCategory === cat
+                  ? "bg-[#ef7e00] text-white"
+                  : "text-gray-800 bg-transparent hover:bg-gray-50"
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        {/* ── Product grid ── */}
+        <div className="mt-8">
+          {loading ? (
+            // Loading skeleton
+            <div className="flex gap-4">
+              <div className="flex flex-1 flex-col gap-6">
+                {skeletons
+                  .filter((_, i) => i % 2 === 0)
+                  .map((_, i) => (
+                    <div
+                      key={i}
+                      className={`w-full rounded-[24px] bg-gray-100 animate-pulse ${
+                        getLeftColAspect(i)
+                      }`}
+                    />
+                  ))}
+              </div>
+              <div className="flex flex-1 flex-col gap-6 pt-12">
+                {skeletons
+                  .filter((_, i) => i % 2 !== 0)
+                  .map((_, i) => (
+                    <div
+                      key={i}
+                      className={`w-full rounded-[24px] bg-gray-100 animate-pulse ${
+                        getRightColAspect(i)
+                      }`}
+                    />
+                  ))}
+              </div>
             </div>
-          </div>
-        )}
+          ) : products.length === 0 ? (
+            <p className="py-16 text-center text-gray-500">
+              No products found.
+            </p>
+          ) : (
+            // Staggered 2-column masonry layout
+            <div className="flex gap-4">
+              {/* Left column */}
+              <div className="flex flex-1 flex-col gap-5">
+                {leftCol.map((p, i) => (
+                  <ProductCard
+                    key={p._id}
+                    product={p}
+                    imageClass={getLeftColAspect(i)}
+                  />
+                ))}
+              </div>
+
+              {/* Right column - offset by padding */}
+              <div className="flex flex-1 flex-col gap-5 pt-8">
+                {rightCol.map((p, i) => (
+                  <ProductCard
+                    key={p._id}
+                    product={p}
+                    imageClass={getRightColAspect(i)}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       <BottomNav />
-    </div>
+    </main>
   );
 }

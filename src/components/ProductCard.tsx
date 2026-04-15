@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingBag } from "lucide-react";
 import { IProduct } from "@/types";
 
 interface ProductCardProps {
@@ -15,38 +15,40 @@ export default function ProductCard({
   imageClass = "aspect-[0.78]",
 }: ProductCardProps) {
   return (
-    <Link href={`/products/${product._id}`} className="product-card group block">
-      {/*
-        Wrap image + button in a relative container WITHOUT overflow-hidden.
-        The card itself (.product-card) has overflow:hidden which clips top image corners.
-        Removing overflow-hidden here prevents the rounded card from clipping the cart button.
-      */}
-      <div className={`relative w-full ${imageClass}`}>
-        <Image
-          src={product.images[0]}
-          alt={product.title}
-          fill
-          sizes="(max-width: 640px) 48vw, (max-width: 1024px) 33vw, 22vw"
-          className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
-          unoptimized
-        />
+    <Link href={`/products/${product._id}`} className="group block relative mb-2">
+      <div className="relative">
+        {/* The Image Container */}
+        <div className={`relative w-full ${imageClass} overflow-hidden rounded-[24px]`}>
+          <Image
+            src={product.images[0]}
+            alt={product.title}
+            fill
+            sizes="(max-width: 640px) 48vw, (max-width: 1024px) 33vw, 22vw"
+            className="object-cover object-top transition-transform duration-500"
+            unoptimized
+          />
+        </div>
+        
+        {/* Overlapping Cart Button */}
         <button
           aria-label={`Add ${product.title} to cart`}
           onClick={(e) => {
             e.preventDefault();
             window.location.href = `/products/${product._id}`;
           }}
-          className="absolute bottom-3 right-3 flex h-9 w-9 items-center justify-center rounded-full bg-gray-900 text-white shadow-lg transition hover:bg-gray-700"
+          className="absolute -bottom-4 right-1 flex h-[44px] w-[44px] items-center justify-center rounded-full bg-[#111111] text-white border-[5px] border-white z-10 transition-transform active:scale-95"
         >
-          <ShoppingCart size={15} />
+          <ShoppingBag size={15} strokeWidth={2.5} className="mt-0.5" />
         </button>
       </div>
 
-      <div className="px-3 pb-4 pt-2">
-        <p className="text-[0.95rem] font-semibold text-gray-900">
+      <div className="pt-4 pr-4">
+        <p className="text-[15px] font-bold tracking-tight text-gray-900 leading-none">
           ${product.price.toFixed(2)}
         </p>
-        <p className="mt-0.5 text-[0.82rem] text-gray-500 truncate">{product.title}</p>
+        <p className="mt-1 text-[13px] text-gray-500 font-normal truncate leading-tight">
+          {product.title}
+        </p>
       </div>
     </Link>
   );
