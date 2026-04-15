@@ -46,7 +46,7 @@ export default function CartPage() {
 
   return (
     <main className="min-h-dvh w-full pb-20 md:pb-0">
-      <div className="mx-auto flex min-h-dvh w-full max-w-3xl flex-col px-5 pt-8 sm:px-8 md:pl-28 lg:pl-32">
+      <div className="mx-auto flex min-h-dvh w-full max-w-[32rem] flex-col px-5 pt-8 sm:px-8 md:pl-28 lg:pl-32 lg:max-w-[44rem] xl:max-w-[48rem]">
         <header className="flex items-center justify-between pb-4">
           <button
             onClick={() => router.back()}
@@ -106,7 +106,7 @@ export default function CartPage() {
                   return (
                     <div
                       key={key}
-                      className={`relative flex items-center gap-5 transition-opacity ${isRemoving ? "opacity-40" : ""}`}
+                      className={`relative w-full flex items-center gap-5 transition-opacity ${isRemoving ? "opacity-40" : ""}`}
                     >
                       <div className="relative h-32 w-32 shrink-0 overflow-hidden rounded-[2.25rem] bg-[#fdfaf5] shadow-sm">
                         <Image
