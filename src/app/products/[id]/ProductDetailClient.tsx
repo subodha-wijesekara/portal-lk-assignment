@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { ChevronLeft, Bookmark } from "lucide-react";
+import BottomNav from "@/components/BottomNav";
 import { IProduct, IColor } from "@/types";
 
 interface ProductDetailClientProps {
@@ -44,8 +45,8 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
   };
 
   return (
-    <main className="min-h-dvh bg-white px-6 pb-8 pt-4 sm:px-8">
-      <div className="mx-auto flex min-h-[calc(100dvh-3rem)] w-full max-w-[26rem] flex-col bg-white">
+    <main className="min-h-dvh w-full pb-20 md:pb-0">
+      <div className="mx-auto flex w-full max-w-[32rem] flex-col px-5 pt-8 sm:px-8 md:pl-28 lg:pl-32 lg:max-w-[64rem] xl:max-w-[72rem]">
         <header className="flex items-center justify-between pb-2">
           <button
             onClick={() => router.back()}
@@ -65,27 +66,31 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
           </button>
         </header>
 
-        <div className="mt-4 relative overflow-hidden rounded-[2.75rem] bg-[#f0e7d9] shadow-sm">
-          <div className="relative aspect-[0.88] w-full">
-            <Image
-              src={product.images[0]}
-              alt={product.title}
-              fill
-              priority
-              sizes="(max-width: 640px) 100vw, 420px"
-              className="object-cover object-top"
-              unoptimized
-            />
+        <div className="flex flex-col lg:grid lg:grid-cols-2 lg:gap-12 xl:gap-16 lg:items-start lg:pb-12">
+          {/* Column 1: Image Gallery */}
+          <div className="mt-4 lg:mt-0 w-full relative overflow-hidden rounded-[2.75rem] bg-[#f0e7d9] shadow-sm lg:sticky lg:top-8">
+            <div className="relative aspect-[0.88] w-full">
+              <Image
+                src={product.images[0]}
+                alt={product.title}
+                fill
+                priority
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover object-top"
+                unoptimized
+              />
           </div>
           <div className="pointer-events-none absolute bottom-5 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full bg-black/10 px-2.5 py-1.5 backdrop-blur-md">
             <span className="h-1.5 w-1.5 rounded-full bg-white/40" />
             <span className="h-1.5 w-8 rounded-full bg-white" />
-            <span className="h-1.5 w-1.5 rounded-full bg-white/40" />
+            </div>
           </div>
-        </div>
 
-        <div className="mt-8 flex flex-wrap items-start justify-between gap-x-4 gap-y-3 px-1">
-          <h2 className="flex-1 text-[2rem] font-extrabold leading-[1.1] tracking-[-0.03em] text-gray-950 sm:text-[2.25rem]">
+          {/* Column 2: Product Details */}
+          <div className="flex flex-col w-full min-h-full">
+
+          <div className="mt-8 lg:mt-2 flex flex-wrap items-start justify-between gap-x-4 gap-y-3 px-1">
+            <h2 className="flex-1 text-[2rem] font-extrabold leading-[1.1] tracking-[-0.03em] text-gray-950 sm:text-[2.25rem]">
             {product.title}
           </h2>
 
@@ -109,10 +114,10 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                 />
               );
             })}
+            </div>
           </div>
-        </div>
 
-        <section className="mt-10 px-1">
+          <section className="mt-10 lg:mt-12 px-1">
           <p className="text-xl font-extrabold tracking-tight text-gray-950">
             Size
           </p>
@@ -136,23 +141,26 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                 </button>
               );
             })}
-          </div>
-        </section>
+            </div>
+          </section>
 
-        <div className="mt-auto flex items-center justify-between gap-6 px-1 pt-12 pb-2">
-          <p className="text-[2.1rem] font-extrabold tracking-tighter text-gray-950">
-            ${product.price.toFixed(2)}
-          </p>
-          <button
-            onClick={handleAddToCart}
-            disabled={adding}
-            className="flex flex-1 max-w-[15rem] items-center justify-center rounded-[1.75rem] bg-[#f6890d] py-4.5 text-lg font-bold text-white shadow-[0_15px_30px_rgba(246,137,13,0.3)] transition-all active:scale-[0.96] disabled:opacity-70"
-            id="add-to-cart-btn"
-          >
-            {added ? "Added" : adding ? "Adding..." : "Add To Cart"}
-          </button>
+          <div className="mt-10 lg:mt-auto flex items-center justify-between gap-6 px-1 pt-8 pb-2 lg:pt-16">
+            <p className="text-[2.1rem] font-extrabold tracking-tighter text-gray-950">
+              ${product.price.toFixed(2)}
+            </p>
+            <button
+              onClick={handleAddToCart}
+              disabled={adding}
+              className="flex flex-1 max-w-[15rem] items-center justify-center rounded-[1.75rem] bg-[#f6890d] py-4.5 text-lg font-bold text-white shadow-[0_15px_30px_rgba(246,137,13,0.3)] transition-all active:scale-[0.96] disabled:opacity-70"
+              id="add-to-cart-btn"
+            >
+              {added ? "Added" : adding ? "Adding..." : "Add To Cart"}
+            </button>
+          </div>
         </div>
       </div>
+      </div>
+      <BottomNav />
     </main>
   );
 }
