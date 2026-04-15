@@ -48,30 +48,30 @@ export default function ExplorePage({
   return (
     <div className="explore-page">
       {/* ── Top bar ── */}
-      <div className="flex items-center justify-between">
-        <LayoutGrid size={24} strokeWidth={1.8} className="text-gray-800" />
-        <div className="h-7 w-7 rounded-full border-2 border-gray-400" />
+      <div className="flex items-center justify-between pt-2">
+        <LayoutGrid size={24} strokeWidth={1.8} className="text-gray-900" />
+        <div className="h-7 w-7 rounded-full border-2 border-gray-300" />
       </div>
 
       {/* ── Heading ── */}
-      <div className="mt-6 lg:mt-8">
-        <h1 className="text-[1.9rem] font-bold tracking-[-0.03em] text-gray-950 lg:text-5xl">
+      <div className="mt-8 lg:mt-12">
+        <h1 className="text-[2.1rem] font-bold tracking-[-0.04em] text-gray-950 lg:text-5xl">
           Explore
         </h1>
-        <p className="mt-1 text-sm text-gray-500 lg:mt-2 lg:text-base">
+        <p className="mt-1 text-[0.9rem] text-gray-400 lg:mt-2 lg:text-lg">
           Best trendy collection!
         </p>
       </div>
 
       {/* ── Category pills ── */}
-      <div className="mt-5 flex gap-2 overflow-x-auto pb-1 no-scrollbar lg:gap-3 lg:mt-7">
+      <div className="mt-8 flex gap-4 overflow-x-auto pb-1 no-scrollbar lg:gap-6 lg:mt-10">
         {CATEGORIES.map((cat) => (
           <button
             key={cat}
             onClick={() => setActiveCategory(cat)}
-            className={`shrink-0 rounded-full px-5 py-2 text-sm font-semibold transition-all lg:px-6 lg:py-2.5 lg:text-[0.95rem] ${
+            className={`shrink-0 rounded-full py-2.5 px-7 text-sm font-semibold transition-all lg:px-9 lg:py-3.5 lg:text-base ${
               activeCategory === cat
-                ? "bg-orange-500 text-white shadow-md shadow-orange-200"
+                ? "bg-orange-500 text-white shadow-lg shadow-orange-100"
                 : "text-gray-500 hover:text-gray-800"
             }`}
           >
