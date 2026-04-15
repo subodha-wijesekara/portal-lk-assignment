@@ -1,26 +1,278 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-brand: #f97316;
+  --color-brand-dark: #ea6b00;
+  --color-surface: #f8f6f3;
+  --color-card: #ffffff;
+  --color-text-primary: #1a1a1a;
+  --color-text-secondary: #6b7280;
+  --font-family-sans: var(--font-sans), "Geist", ui-sans-serif, system-ui, sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+html,
+body {
+  height: 100%;
+  background-color: #f4efe8;
+  font-family: var(--font-family-sans);
+  color: var(--color-text-primary);
+}
+
+/* Main container */
+.app-container {
+  min-height: 100dvh;
+  background:
+    radial-gradient(circle at 15% 10%, rgba(249, 115, 22, 0.14), transparent 28%),
+    radial-gradient(circle at 85% 0%, rgba(249, 115, 22, 0.08), transparent 22%),
+    linear-gradient(180deg, #fbf8f4 0%, #f5f0e8 50%, #f1ebe3 100%);
+  position: relative;
+  overflow-x: hidden;
+}
+
+.app-container::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.4) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.4) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.18), transparent 75%);
+  opacity: 0.25;
+}
+
+.page-shell {
+  width: min(100%, 1440px);
+  margin: 0 auto;
+  padding: 1rem 1rem calc(6rem + env(safe-area-inset-bottom));
+}
+
+.home-shell {
+  padding: 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .page-shell {
+    padding: 1.5rem 1.5rem 4rem;
+  }
+
+  .home-shell {
+    padding: 1.5rem 1.5rem 4rem;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.surface {
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(24px);
+  box-shadow: 0 24px 70px rgba(42, 26, 9, 0.08);
+}
+
+.soft-shadow {
+  box-shadow: 0 20px 50px rgba(24, 16, 6, 0.08);
+}
+
+/* Orange pill button */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f97316;
+  color: #ffffff;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.875rem 2rem;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  cursor: pointer;
+  border: none;
+  width: 100%;
+  min-height: 3.25rem;
+}
+.btn-primary:hover {
+  background-color: #ea6b00;
+}
+.btn-primary:active {
+  transform: scale(0.97);
+}
+
+/* Ghost/outlined button */
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: #1a1a1a;
+  border: 1.5px solid #d1d5db;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.875rem 2rem;
+  transition: border-color 0.2s ease, transform 0.1s ease;
+  cursor: pointer;
+  width: 100%;
+  min-height: 3.25rem;
+}
+.btn-outline:hover {
+  border-color: #9ca3af;
+}
+
+/* Bottom navigation bar (floating on mobile, rail on desktop) */
+.bottom-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.88);
+  border-top: 1px solid rgba(240, 236, 230, 0.95);
+  backdrop-filter: blur(24px);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0.75rem 0 calc(0.9rem + env(safe-area-inset-bottom));
+  z-index: 50;
+  box-shadow: 0 -12px 40px rgba(24, 16, 6, 0.08);
+}
+
+@media (min-width: 768px) {
+  .bottom-nav {
+    position: fixed;
+    top: 50%;
+    bottom: auto;
+    left: 1rem;
+    right: auto;
+    width: 5.75rem;
+    min-height: calc(100dvh - 2rem);
+    transform: translateY(-50%);
+    border-radius: 2rem;
+    border: 1px solid rgba(240, 236, 230, 0.95);
+    padding: 1.25rem 0.75rem;
+    justify-content: flex-start;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+}
+
+.nav-brand {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .nav-brand {
+    display: flex;
+    width: 3rem;
+    height: 3rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1rem;
+    background: linear-gradient(135deg, #f97316, #ffb36b);
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  font-size: 0.72rem;
+  color: #9ca3af;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+@media (min-width: 768px) {
+  .nav-item {
+    width: 100%;
+    min-height: 3.5rem;
+    border-radius: 1.1rem;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+}
+.nav-item.active {
+  color: #f97316;
+  background: rgba(249, 115, 22, 0.09);
+}
+
+/* Product card */
+.product-card {
+  border-radius: 1.7rem;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.74);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 50px rgba(24, 16, 6, 0.08);
+}
+
+/* Size selector pill */
+.size-pill {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #374151;
+  background: #f3f4f6;
+  cursor: pointer;
+  transition: all 0.15s;
+  border: none;
+}
+.size-pill.active {
+  background: #1a1a1a;
+  color: #ffffff;
+}
+.size-pill:hover:not(.active) {
+  background: #e5e7eb;
+}
+
+/* Color swatch */
+.color-swatch {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.15s, outline 0.15s;
+  outline: 2.5px solid transparent;
+  outline-offset: 2px;
+}
+.color-swatch.active {
+  outline-color: #1a1a1a;
+  transform: scale(1.1);
+}
+
+/* Cart item row */
+.cart-item {
+  display: flex;
+  gap: 0.875rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(240, 236, 230, 0.9);
+  align-items: center;
+}
+
+/* Scroll area for mobile with bottom nav */
+.scroll-content {
+  padding-bottom: 5rem;
+}
+@media (min-width: 768px) {
+  .scroll-content {
+    padding-bottom: 2rem;
+  }
 }
