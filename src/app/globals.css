@@ -285,3 +285,23 @@ body {
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+/* Explore page layout — guaranteed padding */
+.explore-page {
+  min-height: 100dvh;
+  padding: 1.25rem 1.25rem calc(7rem + env(safe-area-inset-bottom));
+}
+@media (min-width: 768px) {
+  .explore-page {
+    padding-top: 2rem;
+    padding-right: 2rem;
+    padding-bottom: 3rem;
+    padding-left: 8rem;
+  }
+}
+@media (min-width: 1024px) {
+  .explore-page {
+    padding-left: 9.5rem;
+    padding-right: 3rem;
+  }
+}
