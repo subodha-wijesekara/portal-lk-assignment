@@ -1,5 +1,5 @@
 import BottomNav from "@/components/BottomNav";
-import { ChevronRight, UserCircle2 } from "lucide-react";
+import { ChevronRight, UserCircle2, User, Bell, Globe, Shield, HelpCircle, Info } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -8,12 +8,12 @@ export const metadata: Metadata = {
 
 export default function SettingsPage() {
   const settings = [
-    { label: "Account", icon: "👤" },
-    { label: "Notifications", icon: "🔔" },
-    { label: "Language", icon: "🌐" },
-    { label: "Privacy & Security", icon: "🔒" },
-    { label: "Help & Support", icon: "❓" },
-    { label: "About FashionHub", icon: "ℹ️" },
+    { label: "Account", icon: User },
+    { label: "Notifications", icon: Bell },
+    { label: "Language", icon: Globe },
+    { label: "Privacy & Security", icon: Shield },
+    { label: "Help & Support", icon: HelpCircle },
+    { label: "About FashionHub", icon: Info },
   ];
 
   return (
@@ -46,14 +46,14 @@ export default function SettingsPage() {
             Preferences
           </p>
           <div className="mt-4 divide-y divide-gray-100 overflow-hidden rounded-[1.75rem] bg-white/70">
-            {settings.map(({ label, icon }) => (
+            {settings.map(({ label, icon: Icon }) => (
               <button
                 key={label}
                 className="flex w-full items-center gap-4 px-5 py-4 text-left transition hover:bg-white"
                 aria-label={label}
               >
-                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-50 text-lg">
-                  {icon}
+                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-50 text-[#f97316]">
+                  <Icon size={19} strokeWidth={2} />
                 </span>
                 <span className="text-sm font-medium text-gray-800">{label}</span>
                 <ChevronRight className="ml-auto text-gray-400" size={16} />
